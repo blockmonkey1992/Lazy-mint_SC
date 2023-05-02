@@ -1,4 +1,4 @@
-# LazyMinting NFT Marketplace Splint 1
+# LazyMinting NFT Marketplace
 
 ## Dapp Demo 기본 정보
 
