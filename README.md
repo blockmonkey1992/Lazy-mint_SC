@@ -1,29 +1,24 @@
 # LazyMinting NFT Marketplace
 
 ## Dapp Demo 기본 정보
-
-Web Demo URL : https://lazy-mint-fe.vercel.app/
-
-Contract : https://goerli.etherscan.io/address/0x5a5eb29B037fA4b56D121e2E73D642d544B5Dce6#code
-
-Front-End Source : https://github.com/blockmonkey1992/Lazy-mint_FE
-
-Back-End Source : https://github.com/blockmonkey1992/Lazy-mint_BE
+- Web Demo URL : https://lazy-mint-fe.vercel.app/
+- Contract : https://goerli.etherscan.io/address/0x5a5eb29B037fA4b56D121e2E73D642d544B5Dce6#code
+- Front-End Source : https://github.com/blockmonkey1992/Lazy-mint_FE
+- Back-End Source : https://github.com/blockmonkey1992/Lazy-mint_BE
 
 ## Summary
-블록체인 Dapp을 활용하기 위해서 소비자는 가스 비용을 지불해야 한다는 점이 가장 큰 장애물이 아닐까 생각한다. 본 프로젝트에서는 블록체인에서 핵심적인 기술 중 하나인 NFT(ERC-721)에 대하여 Lazy Minting 기술을 직접 구현해봄으로써 Lazy Minting Flow에 대한 이해를 목적으로 한다. NFT를 발행하는 Creator는 NFT를 발행하는데 비용이 소모되지 않는다. 서명만이 필요하다 (실제로 NFT Minting이 이루어지지 않으나 IPFS 상의 데이터는 올린다). 이후 Buyer가 나타나면 DB에 저장된 서명값을 통해 NFT를 Creator의 이름으로 민팅하고 Redeemer가 NFT를 전달받는 구조로 이루어진다. 또한 한번 사용된 서명을 재사용하는 것을 방지하기위해 Smart Contract영역에서 mapping Data를 통해 관리한다. 사이트 운영자가 악의적 사용자로 동일한 NFT를 DB에 저장된 Signature를 활용해 수차례 민팅이 불가능하다. 또한 Title, Description, IPFS URL, Price를 모두 묶어 msg Hash를 만들었으므로 어떠한 정보도 위변조될 경우 민팅 자체가 불가능하므로 Off-chain영역에서 발생할 수 있는 오라클 문제에 대하여 문제가 발생할 수 있는 부분을 최소화 했다. 또한 Client에서 Transaction을 전송했을 시 실패하면 가스비용이 나가게 된다. 이러한점을 개선하기 위해 Client Side에서 Estimate Gas와 Static Call방식으로 Transaction 실패 확률을 대폭 낮추었다.
+본 프로젝트에서는 Opensea등에서 사용하는 NFT Lazyminting을 알아보기 위한 Project로 주로 사용하는 ERC-721 NFT에 대하여 Creator의 NFT 등록 시 비용 소모 없이 서명만을 통해 NFT를 등록하고, 구매자가 NFT를 구매할 때 서명 검증을 통해 실제로 NFT Minting 이루어지는 Dapp이다. NFT를 등록할 때 MongoDB를 통해 Board 정보의 Title, Des, Price등의 내용을 통해 MsgHash를 만들어 서명을 진행하고, Buyer가 나타나면 구매버튼을 클릭 할 때 SmartContract로 Voucher를 생성하면서 DB의 Title, Des, Price정보와 MsgHash정보를 검증하고 NFT를 민팅할 수 있다. 이를 통해 외부 공격자 또는 Service Provider의 악의적인 DB 위변조에 대하여 보완할 수 있으며 Creator가 등록한 정보 그대로를 데이터 무결성을 지키며 Minting이 가능하다. 또한 Blockchain Network를 활용함으로써 발생하는 Transaction 실패에 대한 가스비용 지불문제를 Static Call Method을 통해 EVM 정적 호출을 통해 사전확인 후 Transaction을 전송해 실패확률을 대폭 낮추었다. 또한 서명의 재사용문제를 Smart Contract에서 사용한 서명에 대한 정보를 mapping Data를 통해 관리하면서 서명 재사용 문제를 방지했다.
 
 
 ## Construction Skills
 - Ethereum Goerli Test Network
 - IPFS(nft.storage) - 분산형 파일저장 시스템으로 nft.storage를 사용했다.
 - Solidity (8.15) - Smart Contract 개발언어로 8.15 최신버전을 사용했다.
-- Hardhat & Ethers - Contract 개발 및 테스트 툴로 사용했다. (최근 Truffle, web3.js에 비해 점유율이 다소 높아져 본 프로젝트에서 채택)
+- Hardhat & Ethers - Contract 개발 및 테스트 툴로 사용했다.
 - Openzeppelin - Smart Contract Library
-- Javascript & React - Client Side
+- React - Client Side
 - Nodejs(Express) - Server Side
 - MongoDB - NoSQL DB
-
 
 
 ## Application Architecture
@@ -32,7 +27,11 @@ Back-End Source : https://github.com/blockmonkey1992/Lazy-mint_BE
 
 ## Contract 구성
 
-컨트렉트 내에는 기본적으로 Lazyminting, Minting, Set Locking, Minting Price Adjust, Emergency Withdrawal 등 의 기능을 포함하고 테스트코드에서 확인이 가능하다.
+컨트렉트 내에는 기본적으로 Lazyminting, Minting, Set Locking, Minting Price Adjust(민팅가격조정), Emergency Withdrawal(비상출금) 등 의 기능을 포함하고 테스트 코드에서 확인이 가능하다.
 
+실행방법
+```
+  npx hardhat test
+```
 
 ![contract_Graph](https://user-images.githubusercontent.com/66409384/180267157-85d0bf2e-2cb6-48ef-bbd7-0e88bf1238fe.svg)
