@@ -5,6 +5,7 @@
 - Contract : https://goerli.etherscan.io/address/0x5a5eb29B037fA4b56D121e2E73D642d544B5Dce6#code
 - Front-End Source : https://github.com/blockmonkey1992/Lazy-mint_FE
 - Back-End Source : https://github.com/blockmonkey1992/Lazy-mint_BE
+- Notion : https://www.notion.so/blockchain-lighthouse/Lazy-Minting-Marketplace-802ceb86b33d44049208a9d6b52a7649?pvs=4
 
 ## Summary
 본 프로젝트에서는 Opensea등에서 사용하는 NFT Lazyminting을 알아보기 위한 Project로 주로 사용하는 ERC-721 NFT에 대하여 Creator의 NFT 등록 시 비용 소모 없이 서명만을 통해 NFT를 등록하고, 구매자가 NFT를 구매할 때 서명 검증을 통해 실제로 NFT Minting 이루어지는 Dapp이다. NFT를 등록할 때 MongoDB를 통해 Board 정보의 Title, Des, Price등의 내용을 통해 MsgHash를 만들어 서명을 진행하고, Buyer가 나타나면 구매버튼을 클릭 할 때 SmartContract로 Voucher를 생성하면서 DB의 Title, Des, Price정보와 MsgHash정보를 검증하고 NFT를 민팅할 수 있다. 이를 통해 외부 공격자 또는 Service Provider의 악의적인 DB 위변조에 대하여 보완할 수 있으며 Creator가 등록한 정보 그대로를 데이터 무결성을 지키며 Minting이 가능하다. 또한 Blockchain Network를 활용함으로써 발생하는 Transaction 실패에 대한 가스비용 지불문제를 Static Call Method을 통해 EVM 정적 호출을 통해 사전확인 후 Transaction을 전송해 실패확률을 대폭 낮추었다. 또한 서명의 재사용문제를 Smart Contract에서 사용한 서명에 대한 정보를 mapping Data를 통해 관리하면서 서명 재사용 문제를 방지했다.
